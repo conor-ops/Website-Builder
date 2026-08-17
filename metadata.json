@@ -1,0 +1,8 @@
+{
+  "name": "208 Fence and Gate LLC",
+  "description": "Professional residential fence & automated gate contractor and custom software developer featuring perimeter solutions, quote calculators, and smart gate automation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

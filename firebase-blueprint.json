@@ -1,0 +1,162 @@
+{
+  "entities": {
+    "QuoteRequest": {
+      "title": "QuoteRequest",
+      "description": "Customer fence and gate quote requests and site survey estimates",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "fenceType": {
+          "type": "string"
+        },
+        "linearFeet": {
+          "type": "number"
+        },
+        "gateType": {
+          "type": "string"
+        },
+        "estimatedCost": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "contacted", "scheduled", "completed"]
+        },
+        "notes": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["customerName", "email", "fenceType", "linearFeet"]
+    },
+    "JobSchedule": {
+      "title": "JobSchedule",
+      "description": "Scheduled residential fence installations and gate maintenance visits",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "jobType": {
+          "type": "string",
+          "enum": ["fence_install", "gate_install", "gate_maintenance", "warranty_service", "site_survey"]
+        },
+        "date": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["upcoming", "in_progress", "completed", "cancelled"]
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": ["title", "customerName", "jobType", "date"]
+    },
+    "WarrantyRecord": {
+      "title": "WarrantyRecord",
+      "description": "Registered 5-10 year residential fence and gate warranties",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "customerName": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "installDate": {
+          "type": "string"
+        },
+        "warrantyType": {
+          "type": "string"
+        },
+        "warrantyDurationYears": {
+          "type": "number"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "expired", "claimed"]
+        }
+      },
+      "required": ["customerName", "address", "installDate", "warrantyType"]
+    },
+    "MailQueue": {
+      "title": "MailQueue",
+      "description": "Outbound email trigger queue processed by Firebase Trigger Email extensions",
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "array",
+          "description": "List of recipient email addresses"
+        },
+        "message": {
+          "type": "object",
+          "description": "Email subject, plain text, and HTML body contents"
+        },
+        "quoteId": {
+          "type": "string"
+        },
+        "recipientEmail": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["to", "message"]
+    }
+  },
+  "firestore": {
+    "/quotes/{quoteId}": {
+      "schema": "QuoteRequest",
+      "description": "Client fence and automated gate quotes submitted online"
+    },
+    "/schedules/{scheduleId}": {
+      "schema": "JobSchedule",
+      "description": "Contractor and installation project schedules"
+    },
+    "/warranties/{warrantyId}": {
+      "schema": "WarrantyRecord",
+      "description": "Registered customer craftsmanship warranties"
+    },
+    "/mail/{mailId}": {
+      "schema": "MailQueue",
+      "description": "Email notifications dispatched via Firebase Trigger Email extension"
+    }
+  }
+}
