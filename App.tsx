@@ -39,6 +39,9 @@ import FacebookFenceHub from './components/FacebookFenceHub';
 import GitHubSoftwareHub from './components/GitHubSoftwareHub';
 import DivisionSplitBanner from './components/DivisionSplitBanner';
 import FenceEstimateTool from './components/FenceEstimateTool';
+import TestimonialCarousel from './components/TestimonialCarousel';
+import ProjectGallery from './components/ProjectGallery';
+import { Logo } from './components/Logo';
 import { ToastProvider, useToast } from './components/ToastContext';
 import ToastContainer from './components/ToastContainer';
 import { saveQuoteToFirestore } from './services/firebase';
@@ -307,22 +310,27 @@ const AppContent: React.FC = () => {
       <AIChat />
       
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-10 py-5 bg-[#060e18]/85 backdrop-blur-xl border-b border-slate-800/80">
+      <nav className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-10 py-4 bg-[#060e18]/90 backdrop-blur-xl border-b border-slate-800/80">
         <div 
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-3.5 cursor-pointer group"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#1e3a8a] via-[#0f2942] to-slate-900 border border-slate-700/80 flex items-center justify-center shadow-lg group-hover:border-[#38bdf8]/60 transition-colors">
-            <span className="font-heading font-extrabold text-white text-lg tracking-tighter">208</span>
+          {/* Official 208 Logo Emblem Badge */}
+          <div className="relative w-12 h-10 md:w-14 md:h-11 rounded-xl bg-white/95 p-1 border border-slate-700/80 group-hover:border-[#38bdf8] group-hover:shadow-[0_0_15px_rgba(56,189,248,0.35)] transition-all duration-300 flex items-center justify-center overflow-hidden shadow-md">
+            <img 
+              src="/208logo.svg" 
+              alt="208 Fence and Gate Logo" 
+              className="w-full h-full object-contain"
+            />
           </div>
           <div>
-            <div className="font-heading text-lg md:text-xl font-bold tracking-tight text-white group-hover:text-[#38bdf8] transition-colors">
+            <div className="font-heading text-lg md:text-xl font-bold tracking-tight text-white group-hover:text-[#38bdf8] transition-colors leading-none">
               208 FENCE & GATE
             </div>
-            <div className="text-[10px] font-mono text-slate-400 tracking-wider uppercase flex items-center gap-1.5">
-              <span>Contractor</span>
+            <div className="text-[10px] font-mono text-slate-400 tracking-wider uppercase flex items-center gap-1.5 mt-1">
+              <span className="text-[#38bdf8] font-bold">(208) 358-9077</span>
               <span className="w-1 h-1 rounded-full bg-[#00ff66]" />
-              <span>Software Lab</span>
+              <span>Contractor & Lab</span>
             </div>
           </div>
         </div>
@@ -367,9 +375,11 @@ const AppContent: React.FC = () => {
             {[
               { label: 'Divisions', id: 'division-portal' },
               { label: 'Services', id: 'services' },
+              { label: 'Gallery', id: 'project-gallery-section' },
               { label: 'Facebook (Fences)', id: 'facebook-hub' },
               { label: 'GitHub (Software)', id: 'github-hub' },
               { label: 'Estimates', id: 'estimate' },
+              { label: 'Reviews', id: 'testimonials-section' },
               { label: 'Service Map', id: 'service-map' },
               { label: 'Workspace Hub', id: 'workspace-hub' },
               { label: 'FAQ', id: 'faq-section' }
@@ -382,7 +392,11 @@ const AppContent: React.FC = () => {
                     ? 'text-[#1877F2] hover:text-white' 
                     : item.id === 'github-hub' 
                       ? 'text-[#00ff66] hover:text-white' 
-                      : 'hover:text-white'
+                      : item.id === 'testimonials-section'
+                        ? 'text-emerald-400 hover:text-white'
+                        : item.id === 'project-gallery-section'
+                          ? 'text-[#38bdf8] hover:text-white'
+                          : 'hover:text-white'
                 }`}
                 data-hover="true"
               >
@@ -421,12 +435,17 @@ const AppContent: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-30 bg-[#060e18]/98 backdrop-blur-2xl flex flex-col items-center justify-center gap-4 lg:hidden px-6 overflow-y-auto py-12"
           >
-            <div className="w-12 h-12 rounded-2xl bg-[#1e3a8a] border border-[#38bdf8]/40 flex items-center justify-center text-white font-heading font-extrabold text-xl mb-1">
-              208
+            {/* Official Logo on Mobile Menu Header */}
+            <div className="w-28 h-auto p-2 bg-white/95 rounded-2xl shadow-xl border border-slate-700/50 mb-1">
+              <img 
+                src="/208logo.svg" 
+                alt="208 Fence & Gate Logo" 
+                className="w-full h-auto object-contain" 
+              />
             </div>
-            <div className="text-lg font-heading font-bold text-center">208 FENCE & GATE LLC</div>
-            <p className="text-xs text-slate-400 font-mono text-center max-w-xs mb-2">
-              Residential Contractor & Software Developer
+            <div className="text-xl font-heading font-bold text-center text-white">208 FENCE & GATE LLC</div>
+            <p className="text-xs text-[#38bdf8] font-mono text-center max-w-xs font-semibold mb-1">
+              (208) 358-9077 • Licensed Idaho Contractor
             </p>
 
             {/* Division Switcher on Mobile */}
@@ -455,9 +474,11 @@ const AppContent: React.FC = () => {
               {[
                 { label: 'Divisions', id: 'division-portal' },
                 { label: 'Services', id: 'services' },
+                { label: 'Gallery Showcase', id: 'project-gallery-section' },
                 { label: 'Facebook (Fences)', id: 'facebook-hub' },
                 { label: 'GitHub (Software)', id: 'github-hub' },
                 { label: 'Estimate', id: 'estimate' },
+                { label: 'Client Reviews', id: 'testimonials-section' },
                 { label: 'Service Map', id: 'service-map' },
                 { label: 'Workspace Hub', id: 'workspace-hub' },
                 { label: 'FAQ', id: 'faq-section' }
@@ -470,7 +491,11 @@ const AppContent: React.FC = () => {
                       ? 'text-[#1877F2]'
                       : item.id === 'github-hub'
                         ? 'text-[#00ff66]'
-                        : 'text-white hover:text-[#38bdf8]'
+                        : item.id === 'testimonials-section'
+                          ? 'text-emerald-400'
+                          : item.id === 'project-gallery-section'
+                            ? 'text-[#38bdf8]'
+                            : 'text-white hover:text-[#38bdf8]'
                   }`}
                 >
                   {item.label}
@@ -498,16 +523,26 @@ const AppContent: React.FC = () => {
           style={{ y, opacity }}
           className="z-10 text-center flex flex-col items-center w-full max-w-6xl"
         >
-          {/* Location & License Badge */}
+          {/* Official Emblem & License Badge */}
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-            className="flex items-center gap-2 md:gap-3 text-xs md:text-sm font-mono text-slate-300 tracking-wider uppercase mb-6 bg-[#0c1e33]/80 border border-slate-700/80 px-5 py-2 rounded-full backdrop-blur-md shadow-lg"
+            initial={{ opacity: 0, scale: 0.9, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="mb-4 flex flex-col items-center"
           >
-            <span className="text-[#38bdf8] font-bold">208 AREA CODE</span>
-            <span className="w-1.5 h-1.5 bg-[#00ff66] rounded-full animate-ping"/>
-            <span className="text-slate-400">RESIDENTIAL CONTRACTOR & SOFTWARE LAB</span>
+            <div className="w-32 md:w-44 p-2 bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-slate-700/60 hover:scale-105 transition-all duration-300 group cursor-pointer mb-4">
+              <img 
+                src="/208logo.svg" 
+                alt="208 Fence and Gate" 
+                className="w-full h-auto object-contain drop-shadow-md"
+              />
+            </div>
+            
+            <div className="flex items-center gap-2 md:gap-3 text-xs md:text-sm font-mono text-slate-300 tracking-wider uppercase bg-[#0c1e33]/80 border border-slate-700/80 px-5 py-2 rounded-full backdrop-blur-md shadow-lg">
+              <span className="text-[#38bdf8] font-bold">208 AREA CODE</span>
+              <span className="w-1.5 h-1.5 bg-[#00ff66] rounded-full animate-ping"/>
+              <span className="text-slate-400">RESIDENTIAL CONTRACTOR & SOFTWARE LAB</span>
+            </div>
           </motion.div>
 
           {/* Main Title */}
@@ -998,19 +1033,34 @@ const AppContent: React.FC = () => {
       {/* GOOGLE WORKSPACE (DRIVE, SHEETS, GMAIL, CALENDAR, TASKS, FORMS, PICKER) & FIREBASE HUB */}
       <GoogleWorkspaceHub />
 
+      {/* COMPLETED PROJECT SHOWCASE & MULTI-SOURCE MASONRY IMAGE GALLERY (Firebase Storage, Google Drive, Google Photos) */}
+      <ProjectGallery onQuoteRequest={(spec) => scrollToSection('estimate')} />
+
       {/* FAQ SECTION (Warranties, Gate Maintenance, Software Support) */}
       <FAQSection onNavigateToEstimate={() => scrollToSection('estimate')} />
+
+      {/* TESTIMONIAL CAROUSEL (Pulls client reviews & satisfaction scores from Firestore) */}
+      <TestimonialCarousel onQuoteRequest={() => scrollToSection('estimate')} />
 
       {/* FOOTER */}
       <footer className="relative z-10 border-t border-slate-800 py-14 md:py-16 bg-[#040810]/95 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-[#1e3a8a] border border-[#38bdf8]/40 flex items-center justify-center font-heading font-extrabold text-white text-base">
-                208
+            <div className="flex items-center gap-3.5 mb-4">
+              <div className="w-24 h-auto p-1.5 bg-white/95 rounded-xl border border-slate-700/60 shadow-md flex items-center justify-center">
+                <img 
+                  src="/208logo.svg" 
+                  alt="208 Fence & Gate Logo" 
+                  className="w-full h-auto object-contain" 
+                />
               </div>
-              <div className="font-heading text-xl font-bold tracking-tight text-white">
-                208 FENCE & GATE LLC
+              <div>
+                <div className="font-heading text-lg md:text-xl font-bold tracking-tight text-white leading-none">
+                  208 FENCE & GATE LLC
+                </div>
+                <div className="text-[10px] font-mono text-[#38bdf8] font-bold uppercase mt-1">
+                  (208) 358-9077
+                </div>
               </div>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed mb-4 max-w-sm">
@@ -1041,7 +1091,13 @@ const AppContent: React.FC = () => {
               <li>Maintenance-Free Vinyl & Composite Perimeters</li>
               <li>FenceQuote OS Cloud Estimating Platform</li>
               <li>SmartGate IoT Firmware & Access Control APIs</li>
-              <li className="pt-2">
+              <li className="pt-2 flex flex-col gap-1.5">
+                <button 
+                  onClick={() => scrollToSection('testimonials-section')} 
+                  className="text-emerald-400 hover:text-white transition-colors flex items-center gap-1 font-mono text-xs font-semibold"
+                >
+                  <span>→ Client Reviews & Satisfaction Scores</span>
+                </button>
                 <button 
                   onClick={() => scrollToSection('faq-section')} 
                   className="text-[#38bdf8] hover:text-white transition-colors flex items-center gap-1 font-mono text-xs font-semibold"
@@ -1210,6 +1266,15 @@ const AppContent: React.FC = () => {
         )}
       </AnimatePresence>
     </div>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <ToastProvider>
+      <AppContent />
+      <ToastContainer />
+    </ToastProvider>
   );
 };
 

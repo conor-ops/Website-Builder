@@ -139,6 +139,79 @@
         }
       },
       "required": ["to", "message"]
+    },
+    "ClientReview": {
+      "title": "ClientReview",
+      "description": "Verified client testimonials and project satisfaction scores for 208 Fence & Gate installations",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "clientName": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "projectType": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "number"
+        },
+        "satisfactionScore": {
+          "type": "number"
+        },
+        "reviewText": {
+          "type": "string"
+        },
+        "completionDate": {
+          "type": "string"
+        },
+        "verifiedHomeowner": {
+          "type": "boolean"
+        },
+        "linearFeet": {
+          "type": "number"
+        },
+        "craftsmanshipHighlights": {
+          "type": "array"
+        },
+        "serviceCategory": {
+          "type": "string",
+          "enum": ["wood_fence", "vinyl_fence", "automated_gate", "iron_fence", "software"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["clientName", "location", "projectType", "rating", "satisfactionScore", "reviewText"]
+    },
+    "ProjectGalleryItem": {
+      "title": "ProjectGalleryItem",
+      "description": "Completed fence, gate, and access control project photos with source links (Firebase Storage, Google Drive, Google Photos)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "categoryLabel": { "type": "string" },
+        "location": { "type": "string" },
+        "linearFeet": { "type": "number" },
+        "imageUrl": { "type": "string" },
+        "source": { "type": "string", "enum": ["firebase_storage", "google_drive", "google_photos", "verified_install"] },
+        "sourceLabel": { "type": "string" },
+        "storagePath": { "type": "string" },
+        "googleFileId": { "type": "string" },
+        "description": { "type": "string" },
+        "specs": { "type": "object" },
+        "tags": { "type": "array" },
+        "aspectRatio": { "type": "string", "enum": ["tall", "wide", "square"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "category", "location", "imageUrl", "source"]
     }
   },
   "firestore": {
@@ -157,6 +230,14 @@
     "/mail/{mailId}": {
       "schema": "MailQueue",
       "description": "Email notifications dispatched via Firebase Trigger Email extension"
+    },
+    "/reviews/{reviewId}": {
+      "schema": "ClientReview",
+      "description": "Client project satisfaction reviews and ratings stored in Firestore"
+    },
+    "/project_gallery/{galleryId}": {
+      "schema": "ProjectGalleryItem",
+      "description": "Completed project showcase photos synced with Firebase Storage and Google Workspace"
     }
   }
 }

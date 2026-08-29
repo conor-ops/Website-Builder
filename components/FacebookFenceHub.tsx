@@ -30,7 +30,7 @@ const FACEBOOK_POSTS: FacebookPost[] = [
   {
     id: 'fb-1',
     author: '208 Fence and Gate LLC',
-    authorAvatar: 'https://images.unsplash.com/photo-1541888946425-d0fbb186156f?q=80&w=200&auto=format&fit=crop',
+    authorAvatar: '/208logo.svg',
     timestamp: '2 hours ago',
     location: 'Meridian, Idaho (Paramount Subdivision)',
     projectType: 'Western Red Cedar Privacy',
@@ -48,7 +48,7 @@ const FACEBOOK_POSTS: FacebookPost[] = [
   {
     id: 'fb-2',
     author: '208 Fence and Gate LLC',
-    authorAvatar: 'https://images.unsplash.com/photo-1541888946425-d0fbb186156f?q=80&w=200&auto=format&fit=crop',
+    authorAvatar: '/208logo.svg',
     timestamp: 'Yesterday at 3:45 PM',
     location: 'Eagle, Idaho (Two Rivers Estate)',
     projectType: 'Smart Automated Cantilever Gate',
@@ -66,7 +66,7 @@ const FACEBOOK_POSTS: FacebookPost[] = [
   {
     id: 'fb-3',
     author: '208 Fence and Gate LLC',
-    authorAvatar: 'https://images.unsplash.com/photo-1541888946425-d0fbb186156f?q=80&w=200&auto=format&fit=crop',
+    authorAvatar: '/208logo.svg',
     timestamp: '3 days ago',
     location: 'Boise, Idaho (North End Historic)',
     projectType: 'Architectural Ornamental Iron',
@@ -83,7 +83,7 @@ const FACEBOOK_POSTS: FacebookPost[] = [
   {
     id: 'fb-4',
     author: '208 Fence and Gate LLC',
-    authorAvatar: 'https://images.unsplash.com/photo-1541888946425-d0fbb186156f?q=80&w=200&auto=format&fit=crop',
+    authorAvatar: '/208logo.svg',
     timestamp: '5 days ago',
     location: 'Nampa, Idaho (Ridgecrest)',
     projectType: 'Maintenance-Free Vinyl Privacy',

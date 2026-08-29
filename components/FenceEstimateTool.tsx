@@ -15,6 +15,7 @@ import {
   Trash2, 
   CheckCircle2, 
   Download, 
+  FileDown,
   Printer, 
   Share2, 
   Sparkles, 
@@ -29,7 +30,8 @@ import {
   Sliders,
   ChevronDown,
   ChevronUp,
-  AlertCircle
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
 import { 
   FenceMaterialType, 
@@ -41,6 +43,7 @@ import {
   BOMCalculation 
 } from '../types';
 import { saveQuoteToFirestore } from '../services/firebase';
+import { generateFenceEstimatePdf } from '../services/pdfExportService';
 import { useToast } from './ToastContext';
 
 interface FenceEstimateToolProps {
@@ -210,6 +213,7 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submittedQuoteId, setSubmittedQuoteId] = useState<string | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   // Helper to apply preset
   const applyPreset = (preset: typeof PRESET_YARDS[0]) => {
@@ -425,6 +429,45 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
     }
   };
 
+  const handleDownloadPdf = async () => {
+    setIsGeneratingPdf(true);
+    try {
+      const quotePayload: FenceEstimateDetails = {
+        customerName,
+        customerPhone,
+        customerEmail,
+        projectAddress,
+        city,
+        zipCode,
+        material,
+        postType,
+        heightFeet,
+        postSpacingFeet,
+        railCount,
+        hasRotBoard,
+        hasCapAndTrim,
+        hasStaining,
+        stainColor,
+        terrain,
+        tearOutFeet,
+        segments,
+        gates,
+        notes
+      };
+
+      await generateFenceEstimatePdf({
+        estimate: quotePayload,
+        bom: calculation,
+        quoteId: submittedQuoteId || '208-EST-DRAFT',
+        autoDownload: true
+      });
+    } catch (err) {
+      console.error('Error generating PDF proposal:', err);
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
   const handlePrint = () => {
     window.print();
   };
@@ -474,27 +517,59 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
           </div>
         </div>
 
-        {/* Tab Navigation */}
-        <div className="relative z-10 flex flex-wrap gap-2 mt-8 border-t border-slate-800/80 pt-6">
-          {[
-            { id: 'builder', label: '1. Specs & Materials', icon: Sliders },
-            { id: 'blueprint', label: '2. Yard Layout & 2D CAD', icon: Ruler },
-            { id: 'bom', label: '3. Bill of Materials (BOM)', icon: Layers },
-            { id: 'finalize', label: '4. Summary & Save Bid', icon: FileText },
-          ].map(tab => (
+        {/* Tab Navigation & PDF / Print Actions */}
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 mt-8 border-t border-slate-800/80 pt-6">
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: 'builder', label: '1. Specs & Materials', icon: Sliders },
+              { id: 'blueprint', label: '2. Yard Layout & 2D CAD', icon: Ruler },
+              { id: 'bom', label: '3. Bill of Materials (BOM)', icon: Layers },
+              { id: 'finalize', label: '4. Summary & Save Bid', icon: FileText },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-2 px-4 md:px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? 'bg-[#38bdf8] text-slate-950 shadow-lg shadow-blue-900/40'
+                    : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800'
+                }`}
+              >
+                <tab.icon className="w-4 h-4" />
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5">
             <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono font-bold tracking-wider uppercase transition-all duration-200 ${
-                activeTab === tab.id
-                  ? 'bg-[#38bdf8] text-slate-950 shadow-lg shadow-blue-900/40'
-                  : 'bg-slate-900/80 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800'
-              }`}
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white text-xs font-mono font-bold uppercase tracking-wider border border-slate-700 shadow-md transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+              title="Print official contractor proposal document"
             >
-              <tab.icon className="w-4 h-4" />
-              <span>{tab.label}</span>
+              <Printer className="w-4 h-4 text-[#38bdf8]" />
+              <span>Print Estimate</span>
             </button>
-          ))}
+
+            <button
+              onClick={handleDownloadPdf}
+              disabled={isGeneratingPdf}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#1e40af] to-[#0284c7] hover:from-[#1d4ed8] hover:to-[#0369a1] text-white text-xs font-mono font-bold uppercase tracking-wider shadow-lg shadow-blue-900/30 border border-[#38bdf8]/40 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-75 disabled:cursor-wait cursor-pointer"
+              title="Generate and download official PDF proposal document"
+            >
+              {isGeneratingPdf ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#38bdf8]" />
+                  <span>Creating PDF...</span>
+                </>
+              ) : (
+                <>
+                  <FileDown className="w-4 h-4 text-[#38bdf8]" />
+                  <span>Download PDF Quote</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1161,19 +1236,37 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mt-6 pt-4 border-t border-slate-800">
+              <div className="flex flex-wrap justify-between items-center gap-3 mt-6 pt-4 border-t border-slate-800">
                 <button
                   onClick={() => setActiveTab('builder')}
-                  className="text-xs font-mono text-slate-400 hover:text-white"
+                  className="text-xs font-mono text-slate-400 hover:text-white cursor-pointer"
                 >
                   ← Back to Specs
                 </button>
-                <button
-                  onClick={() => setActiveTab('bom')}
-                  className="px-6 py-2.5 rounded-xl bg-[#1e40af] hover:bg-[#2563eb] text-white text-xs font-mono font-bold uppercase tracking-wider shadow-md"
-                >
-                  Next: Review Itemized Bill of Materials →
-                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handlePrint}
+                    className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+                    title="Print estimate layout"
+                  >
+                    <Printer className="w-3.5 h-3.5 text-[#38bdf8]" />
+                    <span>Print Estimate</span>
+                  </button>
+                  <button
+                    onClick={handleDownloadPdf}
+                    disabled={isGeneratingPdf}
+                    className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#38bdf8] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+                  >
+                    {isGeneratingPdf ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+                    <span>Export PDF</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('bom')}
+                    className="px-6 py-2.5 rounded-xl bg-[#1e40af] hover:bg-[#2563eb] text-white text-xs font-mono font-bold uppercase tracking-wider shadow-md cursor-pointer"
+                  >
+                    Next: Review Itemized Bill of Materials →
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1352,19 +1445,37 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
               </div>
             </div>
 
-            <div className="flex justify-between items-center mt-8 pt-4 border-t border-slate-800">
+            <div className="flex flex-wrap justify-between items-center gap-3 mt-8 pt-4 border-t border-slate-800">
               <button
                 onClick={() => setActiveTab('blueprint')}
-                className="text-xs font-mono text-slate-400 hover:text-white"
+                className="text-xs font-mono text-slate-400 hover:text-white cursor-pointer"
               >
                 ← Back to 2D CAD
               </button>
-              <button
-                onClick={() => setActiveTab('finalize')}
-                className="px-6 py-2.5 rounded-xl bg-[#1e40af] hover:bg-[#2563eb] text-white text-xs font-mono font-bold uppercase tracking-wider shadow-md"
-              >
-                Next: Finalize & Request On-Site Survey →
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={handlePrint}
+                  className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+                  title="Print itemized materials estimate"
+                >
+                  <Printer className="w-3.5 h-3.5 text-[#38bdf8]" />
+                  <span>Print Estimate</span>
+                </button>
+                <button
+                  onClick={handleDownloadPdf}
+                  disabled={isGeneratingPdf}
+                  className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#38bdf8] text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 border border-slate-700 transition-colors cursor-pointer"
+                >
+                  {isGeneratingPdf ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+                  <span>Download BOM (PDF)</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('finalize')}
+                  className="px-6 py-2.5 rounded-xl bg-[#1e40af] hover:bg-[#2563eb] text-white text-xs font-mono font-bold uppercase tracking-wider shadow-md cursor-pointer"
+                >
+                  Next: Finalize & Request On-Site Survey →
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -1375,7 +1486,7 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-8"
+          className="space-y-8 print:hidden"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
@@ -1562,7 +1673,7 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
                 <button
                   onClick={handleSaveAndSubmit}
                   disabled={isSubmitting || !!submittedQuoteId}
-                  className={`w-full py-4 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xl ${
+                  className={`w-full py-4 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xl cursor-pointer ${
                     submittedQuoteId
                       ? 'bg-[#00ff66] text-black cursor-default'
                       : isSubmitting
@@ -1585,19 +1696,30 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
                   )}
                 </button>
 
-                {/* Print & Share utilities */}
-                <div className="flex gap-2">
+                {/* Print & PDF & Share utilities */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   <button
                     onClick={handlePrint}
-                    className="flex-1 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono flex items-center justify-center gap-2 border border-slate-800"
+                    className="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white text-xs font-mono flex items-center justify-center gap-2 border border-slate-700 cursor-pointer shadow-sm transition-all"
+                    title="Print clean contractor proposal"
                   >
-                    <Printer className="w-3.5 h-3.5" />
-                    <span>Print Specification</span>
+                    <Printer className="w-3.5 h-3.5 text-[#38bdf8]" />
+                    <span>Print Estimate</span>
+                  </button>
+
+                  <button
+                    onClick={handleDownloadPdf}
+                    disabled={isGeneratingPdf}
+                    className="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#38bdf8] text-xs font-mono flex items-center justify-center gap-2 border border-slate-700 cursor-pointer shadow-sm transition-all disabled:opacity-50"
+                    title="Download official PDF proposal"
+                  >
+                    {isGeneratingPdf ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <FileDown className="w-3.5 h-3.5" />}
+                    <span>Export PDF</span>
                   </button>
 
                   <button
                     onClick={handleCopyLink}
-                    className="flex-1 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#38bdf8] text-xs font-mono flex items-center justify-center gap-2 border border-slate-800"
+                    className="py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-[#00ff66] text-xs font-mono flex items-center justify-center gap-2 border border-slate-700 cursor-pointer shadow-sm transition-all"
                   >
                     <Share2 className="w-3.5 h-3.5" />
                     <span>{copiedLink ? 'Link Copied!' : 'Share Estimate'}</span>
@@ -1620,6 +1742,260 @@ export const FenceEstimateTool: React.FC<FenceEstimateToolProps> = ({ onQuoteSub
           </div>
         </motion.div>
       )}
+
+      {/* ========================================================================= */}
+      {/* PRINT-ONLY OFFICIAL CONTRACTOR PROPOSAL & ESTIMATE DOCUMENT               */}
+      {/* Visible strictly when printing via browser window.print() / @media print   */}
+      {/* ========================================================================= */}
+      <div id="printable-estimate-document" className="hidden print:block text-slate-900 bg-white p-2">
+        {/* Header */}
+        <div className="border-b-2 border-[#0f2942] pb-4 mb-4 flex justify-between items-start">
+          <div>
+            <h1 className="text-2xl font-bold text-[#0f2942] tracking-tight uppercase">
+              208 Fence and Gate LLC
+            </h1>
+            <p className="text-xs text-slate-600 font-medium">
+              Licensed Idaho Residential Contractor • Fence &amp; Automated Gate Systems
+            </p>
+            <p className="text-[11px] text-slate-500 mt-0.5">
+              Phone: (208) 358-9077 • Email: admin@208fenceandgate.com • Boise, Idaho
+            </p>
+            <p className="text-[10px] text-slate-400">
+              Service Areas: Boise, Meridian, Eagle, Nampa, Caldwell, Kuna, Star ID
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="inline-block px-2.5 py-1 bg-slate-100 border border-slate-300 rounded text-[11px] font-bold text-[#0f2942] uppercase tracking-wider">
+              Official Proposal
+            </span>
+            <div className="text-xs font-bold text-slate-800 mt-1">
+              Ref: {submittedQuoteId || '#208-EST-DRAFT'}
+            </div>
+            <div className="text-[10px] text-slate-500">
+              Date: {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </div>
+            <div className="text-[10px] text-slate-500">
+              Valid for 30 Days
+            </div>
+          </div>
+        </div>
+
+        {/* Client & Site Info Box */}
+        <div className="grid grid-cols-2 gap-4 p-3 bg-slate-50 border border-slate-200 rounded mb-4 text-xs">
+          <div>
+            <span className="font-bold text-[#0f2942] block mb-1 uppercase text-[10px] tracking-wider">
+              Prepared For (Property Owner):
+            </span>
+            <div className="font-semibold text-slate-800">{customerName || 'Treasure Valley Property Owner'}</div>
+            <div className="text-slate-600">Phone: {customerPhone || 'On File / Site Contact'}</div>
+            <div className="text-slate-600">Email: {customerEmail || 'Provided at Survey'}</div>
+          </div>
+          <div>
+            <span className="font-bold text-[#0f2942] block mb-1 uppercase text-[10px] tracking-wider">
+              Project Site Location:
+            </span>
+            <div className="font-semibold text-slate-800">{projectAddress || 'Address to be confirmed on survey'}</div>
+            <div className="text-slate-600">{[city, zipCode ? `ID ${zipCode}` : 'Treasure Valley, ID'].filter(Boolean).join(', ')}</div>
+            <div className="text-slate-600">Terrain: {terrain.replace('_', ' ').toUpperCase()} Ground</div>
+          </div>
+        </div>
+
+        {/* 1. Engineering Specs Table */}
+        <div className="mb-4 page-break-avoid">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[#0f2942] mb-1.5 border-b border-slate-200 pb-0.5">
+            1. Engineering Specifications &amp; Build Scope
+          </h2>
+          <table className="print-table">
+            <tbody>
+              <tr>
+                <th className="w-1/4">Primary Material</th>
+                <td className="w-1/4 font-semibold">{MATERIAL_SPECS[material]?.name} ({MATERIAL_SPECS[material]?.tag})</td>
+                <th className="w-1/4">Total Linear Footage</th>
+                <td className="w-1/4 font-semibold">{calculation.totalLinearFeet} LF ({heightFeet} ft Finished Height)</td>
+              </tr>
+              <tr>
+                <th>Post System</th>
+                <td>{postType.replace('_', ' ').toUpperCase()} • 36&quot; Concrete Footings</td>
+                <th>Post Spacing</th>
+                <td>{postSpacingFeet} ft on Center</td>
+              </tr>
+              <tr>
+                <th>Framing &amp; Rot Board</th>
+                <td>{railCount}-Rail System {hasRotBoard ? '+ 2x6 Ground Rot Board' : ''}</td>
+                <th>Cap &amp; Trim Package</th>
+                <td>{hasCapAndTrim ? 'Architectural 2x4 Cap & 1x2 Face Trim' : 'Standard Flush Top'}</td>
+              </tr>
+              <tr>
+                <th>Protective Finish</th>
+                <td>{hasStaining ? `Oil-Based Stain (${stainColor})` : 'Natural Unstained'}</td>
+                <th>Access Gates</th>
+                <td>{gates.singleGatesCount} Walk Gate(s), {gates.doubleGatesCount} Drive Gate(s)</td>
+              </tr>
+              {gates.automatedSolarOperator && (
+                <tr>
+                  <th>Gate Automation</th>
+                  <td colSpan={3} className="text-emerald-800 font-semibold">
+                    LiftMaster 30W Heavy-Duty Solar DC Operator Kit with Keypad &amp; Dual Remotes
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* 2. Yard Segments & Layout */}
+        <div className="mb-4 page-break-avoid">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[#0f2942] mb-1.5 border-b border-slate-200 pb-0.5">
+            2. Boundary Segments &amp; Layout
+          </h2>
+          <table className="print-table">
+            <thead>
+              <tr>
+                <th>Fence Segment</th>
+                <th>Length (LF)</th>
+                <th>Walk Gates</th>
+                <th>Drive Gates</th>
+                <th>Tear-Out &amp; Disposal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {segments.map((seg, idx) => (
+                <tr key={seg.id || idx}>
+                  <td className="font-semibold">{seg.name || `Segment ${idx + 1}`}</td>
+                  <td>{seg.lengthFeet} LF</td>
+                  <td>{seg.singleGates || 0}</td>
+                  <td>{seg.doubleGates || 0}</td>
+                  <td>{seg.hasTearOut ? 'Yes (Demolish & Haul)' : 'Clear / New Install'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* 3. Bill of Materials (BOM) & Quantities */}
+        <div className="mb-4 page-break-avoid">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[#0f2942] mb-1.5 border-b border-slate-200 pb-0.5">
+            3. Bill of Materials (BOM) Summary
+          </h2>
+          <table className="print-table">
+            <thead>
+              <tr>
+                <th>Material Item</th>
+                <th>Calculated Quantity</th>
+                <th>Hardware &amp; Accessories</th>
+                <th>Quantity / Spec</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Structural Posts (Centers + Gates)</td>
+                <td className="font-semibold">{calculation.totalPostCount} Posts</td>
+                <td>Fasteners &amp; Ring-Shank Nails</td>
+                <td className="font-semibold">{calculation.fastenersCountLbs} lbs</td>
+              </tr>
+              <tr>
+                <td>High-Strength Concrete (60lb Bags)</td>
+                <td className="font-semibold">{calculation.concreteBagsCount} Bags (4000 PSI)</td>
+                <td>Walk Gate Heavy-Duty Hardware</td>
+                <td className="font-semibold">{calculation.singleGateKits} Kit(s)</td>
+              </tr>
+              <tr>
+                <td>Horizontal 2x4 Structural Rails</td>
+                <td className="font-semibold">{calculation.railCount} Rails</td>
+                <td>Double Drive Gate Hardware Kits</td>
+                <td className="font-semibold">{calculation.doubleGateKits} Kit(s)</td>
+              </tr>
+              <tr>
+                <td>Privacy Pickets (5.5&quot; Width)</td>
+                <td className="font-semibold">{calculation.picketCount} Pickets</td>
+                <td>Automation DC Motor Kit</td>
+                <td className="font-semibold">{calculation.automatedOperatorUnits > 0 ? '1 Solar DC Unit + Keypad' : 'Standard Manual Latches'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* 4. Cost Investment Breakdown */}
+        <div className="mb-4 page-break-avoid">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-[#0f2942] mb-1.5 border-b border-slate-200 pb-0.5">
+            4. Itemized Contract Investment Breakdown
+          </h2>
+          <table className="print-table">
+            <tbody>
+              <tr>
+                <td>Materials, Structural Lumber, Posts &amp; Fasteners</td>
+                <td className="text-right font-semibold">${calculation.materialsCost.toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td>Professional Installation, Auger Digging &amp; Post Alignment</td>
+                <td className="text-right font-semibold">${calculation.laborCost.toLocaleString()}</td>
+              </tr>
+              {calculation.tearOutCost > 0 && (
+                <tr>
+                  <td>Existing Fence Demolition, Removal &amp; Landfill Haul-Away</td>
+                  <td className="text-right font-semibold">${calculation.tearOutCost.toLocaleString()}</td>
+                </tr>
+              )}
+              {calculation.gatesCost > 0 && (
+                <tr>
+                  <td>Custom Gates, Reinforced Hardware &amp; Smart Automation Operators</td>
+                  <td className="text-right font-semibold">${calculation.gatesCost.toLocaleString()}</td>
+                </tr>
+              )}
+              {calculation.addonsCost > 0 && (
+                <tr>
+                  <td>Enhancement Package (Staining / Rot Board / Cap &amp; Trim)</td>
+                  <td className="text-right font-semibold">${calculation.addonsCost.toLocaleString()}</td>
+                </tr>
+              )}
+              <tr>
+                <td className="text-slate-600">Idaho State Sales Tax (6.0% on materials only)</td>
+                <td className="text-right text-slate-600">${calculation.tax.toLocaleString()}</td>
+              </tr>
+              <tr className="bg-slate-100">
+                <th className="text-sm font-bold text-[#0f2942]">TOTAL CONTRACT PROPOSAL INVESTMENT</th>
+                <th className="text-right text-base font-bold text-[#0f2942]">${calculation.totalCost.toLocaleString()}</th>
+              </tr>
+              <tr>
+                <td colSpan={2} className="text-emerald-800 text-[10px] italic">
+                  Estimated Financing Available: Starting from ${calculation.monthlyFinancingPayment}/month (84 Months @ 7.99% APR, $0 Down)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {/* 5. Guarantees & Operational Protocol */}
+        <div className="p-3 bg-slate-50 border border-slate-200 rounded mb-4 text-[10px] text-slate-600 page-break-avoid">
+          <div className="font-bold text-[#0f2942] uppercase tracking-wider mb-1">
+            208 Fence &amp; Gate LLC Operational Standards &amp; Warranties:
+          </div>
+          <ul className="list-disc list-inside space-y-0.5">
+            <li><strong>10-Year Workmanship Warranty:</strong> Full coverage against post lean, structural failure, and gate sag under normal Treasure Valley wind conditions.</li>
+            <li><strong>811 DigLine Underground Utility Locate:</strong> Called, marked, and verified by contractor 48 hours before digging.</li>
+            <li><strong>36&quot; Idaho Frost-Line Depth:</strong> Every structural post is set 36&quot; deep with high-strength concrete to prevent winter frost-heave.</li>
+          </ul>
+        </div>
+
+        {/* 6. Signature & Acceptance */}
+        <div className="grid grid-cols-2 gap-8 pt-4 border-t border-slate-300 page-break-avoid">
+          <div>
+            <div className="border-b border-slate-400 h-8 mb-1"></div>
+            <div className="text-[10px] font-semibold text-slate-700">Property Owner / Client Signature</div>
+            <div className="text-[9px] text-slate-500">Date: ________________________</div>
+          </div>
+          <div>
+            <div className="border-b border-slate-400 h-8 mb-1"></div>
+            <div className="text-[10px] font-semibold text-slate-700">208 Fence and Gate LLC Authorized Representative</div>
+            <div className="text-[9px] text-slate-500">Date: ________________________</div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="text-center text-[9px] text-slate-400 mt-6 pt-2 border-t border-slate-200">
+          208 Fence and Gate LLC • Licensed Idaho Contractor • admin@208fenceandgate.com • (208) 358-9077 • Quote Ref: {submittedQuoteId || '#208-EST-DRAFT'}
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,0 +1,97 @@
+/* Global Application & Print Styles */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 10mm 12mm 12mm 12mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    font-size: 9.5pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Universal Hide for interactive / non-printable elements */
+  nav,
+  footer,
+  #ai-chat-root,
+  .ai-chat-container,
+  #division-portal,
+  #hero,
+  #services,
+  #experience,
+  #packages-heading,
+  #packages-grid,
+  .toast-container,
+  .no-print,
+  .interactive-ui,
+  button,
+  input,
+  select,
+  textarea {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  #estimate {
+    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  #fence-estimate-engine {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* The designated print-only layout container */
+  .print-only {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  .screen-only {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .print-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 6px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .print-table th,
+  .print-table td {
+    border: 1px solid #cbd5e1 !important;
+    padding: 5px 8px !important;
+    text-align: left !important;
+    font-size: 8.5pt !important;
+    color: #1e293b !important;
+  }
+
+  .print-table th {
+    background-color: #f1f5f9 !important;
+    color: #0f2942 !important;
+    font-weight: bold !important;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}

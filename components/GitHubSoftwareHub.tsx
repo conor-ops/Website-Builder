@@ -310,7 +310,7 @@ export const GitHubSoftwareHub: React.FC = () => {
             wifiSignalRSSI: '-58 dBm',
             loraCarrierFrequency: '915.0 MHz'
           },
-          status: 'ONLINE_OPTIMAL'
+          deviceStatus: 'ONLINE_OPTIMAL'
         });
       } else {
         setSandboxResponse({

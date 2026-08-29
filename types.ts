@@ -179,3 +179,60 @@ export interface BOMCalculation {
   monthlyFinancingPayment: number;
 }
 
+// Client Review & Homeowner Satisfaction Types (Firestore Collection)
+export interface ClientReview {
+  id: string;
+  clientName: string;
+  location: string;
+  projectType: string;
+  rating: number; // 1-5 scale (e.g. 5.0)
+  satisfactionScore: number; // 1-100% satisfaction score
+  reviewText: string;
+  completionDate: string;
+  verifiedHomeowner: boolean;
+  linearFeet?: number;
+  craftsmanshipHighlights?: string[];
+  serviceCategory: 'wood_fence' | 'vinyl_fence' | 'automated_gate' | 'iron_fence' | 'software';
+  createdAt?: any;
+}
+
+export interface ClientSatisfactionStats {
+  averageRating: number;
+  averageSatisfactionScore: number;
+  totalReviewsCount: number;
+  fiveStarPercentage: number;
+  onTimeCompletionRate: number;
+  warrantySatisfactionRate: number;
+}
+
+// Project Showcase & Multi-Source Image Gallery Types
+export type PhotoSourceType = 'firebase_storage' | 'google_drive' | 'google_photos' | 'verified_install';
+
+export interface ProjectPhotoItem {
+  id: string;
+  title: string;
+  category: 'wood_fence' | 'automated_gate' | 'iron_fence' | 'vinyl_fence' | 'smart_access';
+  categoryLabel: string;
+  location: string;
+  linearFeet?: number;
+  imageUrl: string;
+  thumbnailUrl?: string;
+  source: PhotoSourceType;
+  sourceLabel: string;
+  storagePath?: string; // Firebase Storage ref path if applicable
+  googleFileId?: string; // Google Drive/Photos ID if applicable
+  description: string;
+  specs: {
+    material: string;
+    postType: string;
+    footingDepth: string;
+    hardware: string;
+    warranty: string;
+  };
+  tags: string[];
+  aspectRatio: 'tall' | 'wide' | 'square';
+  featured?: boolean;
+  uploadedAt?: string;
+  homeownerReview?: string;
+}
+

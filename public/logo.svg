@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 230" width="100%" height="100%">
+  <defs>
+    <linearGradient id="emblemSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#e9f2fb"/>
+      <stop offset="100%" stop-color="#d4e4f5"/>
+    </linearGradient>
+  </defs>
+
+  <g id="two-zero-eight-logo">
+    <!-- Top Arc Shape (Upper Half of Oval for House & Fence Scene) -->
+    <path d="M 22,118 C 22,58 102,12 200,12 C 298,12 378,58 378,118 Z" fill="url(#emblemSky)" />
+
+    <!-- Left & Right Picket Fence Along Oval Arc -->
+    <g stroke="#161e48" stroke-width="4" fill="#161e48" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="28" y1="92" x2="118" y2="105" stroke-width="5" />
+      <line x1="38" y1="112" x2="118" y2="116" stroke-width="4" />
+      
+      <line x1="38" y1="78" x2="38" y2="118" stroke-width="6" />
+      <circle cx="38" cy="74" r="5" fill="#161e48" />
+      
+      <line x1="56" y1="84" x2="56" y2="118" stroke-width="5" />
+      
+      <line x1="75" y1="82" x2="75" y2="118" stroke-width="6" />
+      <circle cx="75" cy="78" r="5" fill="#161e48" />
+      
+      <line x1="93" y1="88" x2="93" y2="118" stroke-width="5" />
+      <line x1="108" y1="92" x2="108" y2="118" stroke-width="5" />
+    </g>
+
+    <g stroke="#161e48" stroke-width="4" fill="#161e48" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="282" y1="105" x2="372" y2="92" stroke-width="5" />
+      <line x1="282" y1="116" x2="362" y2="112" stroke-width="4" />
+      
+      <line x1="292" y1="92" x2="292" y2="118" stroke-width="5" />
+      <line x1="307" y1="88" x2="307" y2="118" stroke-width="5" />
+      
+      <line x1="325" y1="82" x2="325" y2="118" stroke-width="6" />
+      <circle cx="325" cy="78" r="5" fill="#161e48" />
+      
+      <line x1="344" y1="84" x2="344" y2="118" stroke-width="5" />
+      
+      <line x1="362" y1="78" x2="362" y2="118" stroke-width="6" />
+      <circle cx="362" cy="74" r="5" fill="#161e48" />
+    </g>
+
+    <!-- HOUSE ILLUSTRATION -->
+    <polygon points="122,86 150,30 252,30 298,86 280,118 122,118" fill="#f4f8fd" />
+    <rect x="126" y="26" width="16" height="32" fill="#161e48" />
+
+    <g stroke="#161e48" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <line x1="100" y1="86" x2="148" y2="18" stroke-width="7" />
+      <line x1="148" y1="18" x2="198" y2="86" stroke-width="7" />
+      <line x1="122" y1="86" x2="122" y2="118" />
+      <line x1="100" y1="86" x2="122" y2="86" />
+      <line x1="148" y1="18" x2="278" y2="34" stroke-width="7" />
+      <line x1="278" y1="34" x2="304" y2="86" stroke-width="7" />
+      <line x1="180" y1="32" x2="265" y2="44" stroke-width="5" />
+    </g>
+
+    <g stroke="#161e48" stroke-width="4.5" stroke-linecap="round">
+      <line x1="188" y1="34" x2="208" y2="76" />
+      <line x1="200" y1="36" x2="220" y2="76" />
+      <line x1="212" y1="37" x2="232" y2="76" />
+      <line x1="224" y1="39" x2="244" y2="76" />
+      <line x1="236" y1="40" x2="256" y2="76" />
+      <line x1="248" y1="42" x2="268" y2="76" />
+      <line x1="260" y1="43" x2="280" y2="76" />
+      <line x1="192" y1="76" x2="288" y2="76" stroke-width="5.5" />
+    </g>
+
+    <g fill="#161e48">
+      <rect x="145" y="90" width="10" height="10" rx="1" />
+      <rect x="158" y="90" width="10" height="10" rx="1" />
+      <rect x="145" y="103" width="10" height="10" rx="1" />
+      <rect x="158" y="103" width="10" height="10" rx="1" />
+      <rect x="238" y="92" width="18" height="26" rx="1" />
+      <rect x="196" y="94" width="6" height="24" />
+      <rect x="196" y="104" width="34" height="6" />
+      <rect x="264" y="104" width="22" height="6" />
+      <rect x="282" y="94" width="6" height="24" />
+    </g>
+
+    <line x1="18" y1="120" x2="382" y2="120" stroke="#161e48" stroke-width="6" stroke-linecap="square" />
+    <ellipse cx="200" cy="115" rx="182" ry="103" fill="none" stroke="#161e48" stroke-width="11" />
+
+    <text 
+      x="200" 
+      y="152" 
+      text-anchor="middle" 
+      fill="#161e48" 
+      font-family="'Space Grotesk', 'Rockwell', 'Impact', 'Arial Black', sans-serif" 
+      font-weight="900" 
+      font-size="23.5" 
+      letter-spacing="4.5"
+    >
+      208 FENCE AND GATE
+    </text>
+
+    <g id="bottom-phone-badge">
+      <path 
+        d="M 54,168 Q 200,186 346,168 C 322,204 266,216 200,216 C 134,216 78,204 54,168 Z" 
+        fill="#161e48" 
+      />
+      <text 
+        x="200" 
+        y="196" 
+        text-anchor="middle" 
+        fill="#ffffff" 
+        font-family="'JetBrains Mono', 'Courier New', monospace" 
+        font-weight="800" 
+        font-size="16.5" 
+        letter-spacing="5"
+      >
+        [208] 358-9077
+      </text>
+    </g>
+  </g>
+</svg>

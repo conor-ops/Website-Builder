@@ -27,7 +27,8 @@ export const WORKSPACE_SCOPES = [
   'https://www.googleapis.com/auth/tasks.readonly',
   'https://www.googleapis.com/auth/forms.body',
   'https://www.googleapis.com/auth/forms.body.readonly',
-  'https://www.googleapis.com/auth/forms.responses.readonly'
+  'https://www.googleapis.com/auth/forms.responses.readonly',
+  'https://www.googleapis.com/auth/photoslibrary.readonly'
 ];
 
 export interface WorkspaceUser {
@@ -364,4 +365,53 @@ export const loadAndOpenGooglePicker = (onPick: (doc: any) => void) => {
       picker.setVisible(true);
     }
   });
+};
+
+// ---------------- Google Drive Project Photos Query ----------------
+export interface DriveImageFile {
+  id: string;
+  name: string;
+  mimeType: string;
+  thumbnailLink?: string;
+  webContentLink?: string;
+  webViewLink?: string;
+  createdTime?: string;
+}
+
+export const listDriveProjectImages = async (): Promise<DriveImageFile[]> => {
+  try {
+    const q = "mimeType contains 'image/' and trashed = false";
+    const res = await googleApiFetch(
+      `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name,mimeType,thumbnailLink,webContentLink,webViewLink,createdTime)&pageSize=20`
+    );
+    return res.files || [];
+  } catch (error) {
+    console.warn('Google Drive project image fetch notice:', error);
+    return [];
+  }
+};
+
+// ---------------- Google Photos API ----------------
+export interface GooglePhotoItem {
+  id: string;
+  baseUrl: string;
+  filename: string;
+  mimeType: string;
+  mediaMetadata?: {
+    creationTime?: string;
+    width?: string;
+    height?: string;
+  };
+}
+
+export const listGooglePhotosMedia = async (pageSize = 20): Promise<GooglePhotoItem[]> => {
+  try {
+    const res = await googleApiFetch(
+      `https://photoslibrary.googleapis.com/v1/mediaItems?pageSize=${pageSize}`
+    );
+    return res.mediaItems || [];
+  } catch (error) {
+    console.warn('Google Photos API query notice (falling back gracefully):', error);
+    return [];
+  }
 };

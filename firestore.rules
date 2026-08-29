@@ -13,5 +13,11 @@ service cloud.firestore {
     match /mail/{mailId} {
       allow read, write: if true;
     }
+    match /reviews/{reviewId} {
+      allow read, write: if true;
+    }
+    match /project_gallery/{galleryId} {
+      allow read, write: if true;
+    }
   }
 }
