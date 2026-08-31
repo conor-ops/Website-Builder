@@ -37,6 +37,7 @@ import ServiceAreaMap from './components/ServiceAreaMap';
 import GoogleWorkspaceHub from './components/GoogleWorkspaceHub';
 import FacebookFenceHub from './components/FacebookFenceHub';
 import GitHubSoftwareHub from './components/GitHubSoftwareHub';
+import VertexOrchestratorHub from './components/VertexOrchestratorHub';
 import DivisionSplitBanner from './components/DivisionSplitBanner';
 import FenceEstimateTool from './components/FenceEstimateTool';
 import TestimonialCarousel from './components/TestimonialCarousel';
@@ -378,6 +379,7 @@ const AppContent: React.FC = () => {
               { label: 'Gallery', id: 'project-gallery-section' },
               { label: 'Facebook (Fences)', id: 'facebook-hub' },
               { label: 'GitHub (Software)', id: 'github-hub' },
+              { label: 'Vertex Orchestrator', id: 'vertex-orchestrator' },
               { label: 'Estimates', id: 'estimate' },
               { label: 'Reviews', id: 'testimonials-section' },
               { label: 'Service Map', id: 'service-map' },
@@ -392,7 +394,9 @@ const AppContent: React.FC = () => {
                     ? 'text-[#1877F2] hover:text-white' 
                     : item.id === 'github-hub' 
                       ? 'text-[#00ff66] hover:text-white' 
-                      : item.id === 'testimonials-section'
+                      : item.id === 'vertex-orchestrator'
+                        ? 'text-[#00F2FE] hover:text-white'
+                        : item.id === 'testimonials-section'
                         ? 'text-emerald-400 hover:text-white'
                         : item.id === 'project-gallery-section'
                           ? 'text-[#38bdf8] hover:text-white'
@@ -477,6 +481,7 @@ const AppContent: React.FC = () => {
                 { label: 'Gallery Showcase', id: 'project-gallery-section' },
                 { label: 'Facebook (Fences)', id: 'facebook-hub' },
                 { label: 'GitHub (Software)', id: 'github-hub' },
+                { label: 'Vertex Orchestrator', id: 'vertex-orchestrator' },
                 { label: 'Estimate', id: 'estimate' },
                 { label: 'Client Reviews', id: 'testimonials-section' },
                 { label: 'Service Map', id: 'service-map' },
@@ -491,7 +496,9 @@ const AppContent: React.FC = () => {
                       ? 'text-[#1877F2]'
                       : item.id === 'github-hub'
                         ? 'text-[#00ff66]'
-                        : item.id === 'testimonials-section'
+                        : item.id === 'vertex-orchestrator'
+                          ? 'text-[#00F2FE]'
+                          : item.id === 'testimonials-section'
                           ? 'text-emerald-400'
                           : item.id === 'project-gallery-section'
                             ? 'text-[#38bdf8]'
@@ -1026,6 +1033,9 @@ const AppContent: React.FC = () => {
 
       {/* GITHUB & GIT REPOSITORIES HUB FOR SOFTWARE DIVISION */}
       <GitHubSoftwareHub />
+
+      {/* VERTEX ORCHESTRATOR — MULTI-AGENT INFRASTRUCTURE LANDING SECTION */}
+      <VertexOrchestratorHub />
 
       {/* GOOGLE MAPS PLATFORM SERVICE DISPATCH MAP */}
       <ServiceAreaMap />

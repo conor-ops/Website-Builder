@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="vGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F2FE"/>
+      <stop offset="60%" stop-color="#00FF87"/>
+      <stop offset="100%" stop-color="#FF416C"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0A0C10" stop-opacity="0.0"/>
+      <stop offset="100%" stop-color="#0A0C10" stop-opacity="0.0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="200" height="200" fill="#0A0C10" rx="20"/>
+
+  <!-- Outer hex ring -->
+  <polygon points="100,10 178,55 178,145 100,190 22,145 22,55"
+    fill="none" stroke="url(#vGrad)" stroke-width="1.5" opacity="0.35"/>
+
+  <!-- Inner hex ring -->
+  <polygon points="100,30 158,63 158,137 100,170 42,137 42,63"
+    fill="none" stroke="#00F2FE" stroke-width="0.8" opacity="0.2"/>
+
+  <!-- Hyper-graph node edges (background) -->
+  <g stroke="#00F2FE" stroke-width="0.8" opacity="0.25" filter="url(#glow)">
+    <!-- center to top-left node -->
+    <line x1="100" y1="100" x2="58" y2="72"/>
+    <!-- center to top-right node -->
+    <line x1="100" y1="100" x2="142" y2="72"/>
+    <!-- center to bottom-left node -->
+    <line x1="100" y1="100" x2="58" y2="128"/>
+    <!-- center to bottom-right node -->
+    <line x1="100" y1="100" x2="142" y2="128"/>
+    <!-- center to top -->
+    <line x1="100" y1="100" x2="100" y2="52"/>
+    <!-- center to bottom -->
+    <line x1="100" y1="100" x2="100" y2="148"/>
+    <!-- cross edges -->
+    <line x1="58" y1="72" x2="142" y2="72"/>
+    <line x1="58" y1="128" x2="142" y2="128"/>
+    <line x1="58" y1="72" x2="58" y2="128"/>
+    <line x1="142" y1="72" x2="142" y2="128"/>
+    <line x1="58" y1="72" x2="100" y2="52"/>
+    <line x1="142" y1="72" x2="100" y2="52"/>
+    <line x1="58" y1="128" x2="100" y2="148"/>
+    <line x1="142" y1="128" x2="100" y2="148"/>
+  </g>
+
+  <!-- Graph nodes -->
+  <g filter="url(#glow)">
+    <circle cx="100" cy="52" r="3.5" fill="#00FF87" opacity="0.9"/>
+    <circle cx="58" cy="72" r="3" fill="#00F2FE" opacity="0.9"/>
+    <circle cx="142" cy="72" r="3" fill="#00F2FE" opacity="0.9"/>
+    <circle cx="58" cy="128" r="3" fill="#00F2FE" opacity="0.9"/>
+    <circle cx="142" cy="128" r="3" fill="#00F2FE" opacity="0.9"/>
+    <circle cx="100" cy="148" r="3.5" fill="#FF416C" opacity="0.9"/>
+    <!-- Center hub node -->
+    <circle cx="100" cy="100" r="5" fill="url(#vGrad)" opacity="1"/>
+    <circle cx="100" cy="100" r="8" fill="none" stroke="url(#vGrad)" stroke-width="1" opacity="0.4"/>
+  </g>
+
+  <!-- Isometric V shape -->
+  <g filter="url(#glow)">
+    <!-- Left arm of V -->
+    <polyline points="62,52 83,110 100,90"
+      fill="none" stroke="url(#vGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Right arm of V -->
+    <polyline points="138,52 117,110 100,90"
+      fill="none" stroke="url(#vGrad)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Isometric depth left -->
+    <polyline points="62,52 62,62 83,120 100,100"
+      fill="none" stroke="#00FF87" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+    <!-- Isometric depth right -->
+    <polyline points="138,52 138,62 117,120 100,100"
+      fill="none" stroke="#00FF87" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="100" y="175" text-anchor="middle"
+    font-family="'Space Grotesk', 'Arial Black', sans-serif"
+    font-weight="800" font-size="11" letter-spacing="5"
+    fill="url(#vGrad)" filter="url(#glow)">VERTEX</text>
+</svg>
