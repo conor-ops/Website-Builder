@@ -1,5 +1,5 @@
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import type { jsPDF } from 'jspdf';
+
 import { 
   FenceEstimateDetails, 
   BOMCalculation, 
@@ -59,7 +59,10 @@ export async function generateFenceEstimatePdf({
   quoteId = '208-EST-DRAFT',
   autoDownload = true
 }: GeneratePdfOptions): Promise<jsPDF> {
-  const doc = new jsPDF({
+  const { jsPDF: jsPDFConstructor } = await import('jspdf');
+  const { default: autoTable } = await import('jspdf-autotable');
+
+  const doc = new jsPDFConstructor({
     orientation: 'portrait',
     unit: 'pt',
     format: 'letter' // 612 x 792 pt

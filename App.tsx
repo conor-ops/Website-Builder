@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
 */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   Shield, 
@@ -33,7 +33,7 @@ import CustomCursor from './components/CustomCursor';
 import ArtistCard from './components/ArtistCard';
 import AIChat from './components/AIChat';
 import FAQSection from './components/FAQSection';
-import ServiceAreaMap from './components/ServiceAreaMap';
+const ServiceAreaMap = lazy(() => import('./components/ServiceAreaMap'));
 import GoogleWorkspaceHub from './components/GoogleWorkspaceHub';
 import FacebookFenceHub from './components/FacebookFenceHub';
 import GitHubSoftwareHub from './components/GitHubSoftwareHub';
@@ -1028,7 +1028,16 @@ const AppContent: React.FC = () => {
       <GitHubSoftwareHub />
 
       {/* GOOGLE MAPS PLATFORM SERVICE DISPATCH MAP */}
-      <ServiceAreaMap />
+      <Suspense fallback={
+        <div className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="h-[450px] bg-slate-900/60 border border-slate-800/80 animate-pulse rounded-2xl flex flex-col items-center justify-center gap-3">
+            <div className="w-10 h-10 border-4 border-sky-500 border-t-transparent rounded-full animate-spin"></div>
+            <p className="text-slate-400 font-mono text-sm">Loading interactive service map...</p>
+          </div>
+        </div>
+      }>
+        <ServiceAreaMap />
+      </Suspense>
 
       {/* GOOGLE WORKSPACE (DRIVE, SHEETS, GMAIL, CALENDAR, TASKS, FORMS, PICKER) & FIREBASE HUB */}
       <GoogleWorkspaceHub />

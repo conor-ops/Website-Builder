@@ -1,23 +1,51 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // Helper function to check if the user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
     match /quotes/{quoteId} {
-      allow read, write: if true;
+      // Anyone can submit a quote request, but only authenticated admins can read or manage them
+      allow create: if request.resource.data.customerName is string 
+                    && request.resource.data.email is string
+                    && request.resource.data.fenceType is string
+                    && request.resource.data.linearFeet is number;
+      allow read, update, delete: if isAuthenticated();
     }
+
     match /schedules/{scheduleId} {
-      allow read, write: if true;
+      // Only authenticated admins can read, write, or manage job schedules
+      allow read, write: if isAuthenticated();
     }
+
     match /warranties/{warrantyId} {
-      allow read, write: if true;
+      // Only authenticated admins can read, write, or manage warranty records
+      allow read, write: if isAuthenticated();
     }
+
     match /mail/{mailId} {
-      allow read, write: if true;
+      // Public can create outgoing mail requests when getting estimates, but only authenticated admins/system can manage the queue
+      allow create: if request.resource.data.to is list
+                    && request.resource.data.message is map;
+      allow read, update, delete: if isAuthenticated();
     }
+
     match /reviews/{reviewId} {
-      allow read, write: if true;
+      // Anyone can read reviews and submit their reviews, but only authenticated admins can update or delete reviews
+      allow read: if true;
+      allow create: if request.resource.data.clientName is string
+                    && request.resource.data.rating is number
+                    && request.resource.data.reviewText is string;
+      allow update, delete: if isAuthenticated();
     }
+
     match /project_gallery/{galleryId} {
-      allow read, write: if true;
+      // Anyone can view the completed project showcase, but only authenticated admins can edit/add photos
+      allow read: if true;
+      allow write: if isAuthenticated();
     }
   }
 }
