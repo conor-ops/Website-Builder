@@ -15,7 +15,7 @@ permissions:
 
 jobs:
   call-central-devops:
-    uses: Autonomous-Agentic-Workflows/central-actions/.github/workflows/central-ci.yml@v1.0.0
+    uses: Autonomous-Agentic-Workflows/central-actions/.github/workflows/central-ci.yml@v1.0.1
     with:
       environment: production
       language: javascript
