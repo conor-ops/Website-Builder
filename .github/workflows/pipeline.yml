@@ -1,0 +1,22 @@
+name: App Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  id-token: write
+  actions: read
+
+jobs:
+  call-central-devops:
+    uses: Autonomous-Agentic-Workflows/central-actions/.github/workflows/central-ci.yml@v1.0.0
+    with:
+      environment: production
+      language: javascript
+    secrets: inherit
